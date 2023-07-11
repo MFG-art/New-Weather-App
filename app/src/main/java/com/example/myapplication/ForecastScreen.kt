@@ -1,8 +1,11 @@
 package com.example.myapplication
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,11 +27,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 // create 16 unique forecast items
 private val forecastItems = listOf(
@@ -184,6 +190,7 @@ private val forecastItems = listOf(
 )
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun ForecastScreen(navController: NavController) {
@@ -216,6 +223,7 @@ private val forecastItems = listOf(
             })
     }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DataItemList(navController: NavController, forecastItems: List<DayForecast>) {
     LazyColumn{
@@ -228,21 +236,49 @@ fun DataItemList(navController: NavController, forecastItems: List<DayForecast>)
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ForecastItemView(dayForecast: DayForecast) {
     /* Create the view for the data item here. */
     Row(
         modifier = Modifier
-            .height(100.dp).background(Color.Gray)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
     ) {
         Image(
-            modifier = Modifier.size(200.dp),
+            modifier = Modifier.size(50.dp),
             painter = painterResource(id = R.drawable.sun),
             contentDescription = stringResource(id = R.string.sun_string)
         )
+        Box(modifier = Modifier.align(Alignment.CenterVertically)) {
+            Text(text = timestampToDateString(dayForecast.date))
+        }
+        Spacer(modifier = Modifier.size(30.dp))
+        Column(){
+            Text(text = "Temp: " + dayForecast.temp.day + "°")
+            Text(text = "High: " + dayForecast.temp.max + "°")
+        }
+        Column(){
+            Text(text = "")
+            Text(text = "Low: " + dayForecast.temp.min + "°")
+        }
+        Spacer(modifier = Modifier.size(30.dp))
+        Column() {
+            Text(text = "Sunrise: " + timestampToTimeString(dayForecast.sunrise))
+            Text(text = "Sunset: " + timestampToTimeString(dayForecast.sunset))
+        }
 
     }
+    Spacer(modifier = Modifier.size(10.dp))
+}
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun timestampToDateString(timestamp: Long):String{
+    val formatter = SimpleDateFormat("MMM dd")
+    return formatter.format(timestamp*1000L)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun timestampToTimeString(timestamp: Long):String{
+    val formatter = SimpleDateFormat("h:mm a")
+    return formatter.format(timestamp*1000L)
 }
