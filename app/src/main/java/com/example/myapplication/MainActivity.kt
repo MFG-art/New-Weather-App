@@ -1,8 +1,10 @@
 package com.example.myapplication
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,13 +33,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.ForecastScreen
+import dagger.hilt.android.HiltAndroidApp
+import retrofit2.Retrofit
+import retrofit2.http.GET
+import retrofit2.http.Path
 
-
+const val apiKey = "2bfdcae4c4869dd4b000b9a614fbd601"
+const val zip = "55075"
 // This is my assignment1 branch
+@HiltAndroidApp
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "MainScreen"){
                 composable("MainScreen") { ScaffoldWithTopBar(navController) }
@@ -46,6 +56,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+object RetrofitHelper {
+    fun getInstance(): Retrofit {
+        return Retrofit.Builder().baseUrl("https://api.openweathermap.org/").build()
+    }
+}
+
+//interface CurrentWeatherDataApi {
+//    @GET("/data/2.5/weather?zip={$zip}&appid={$apiKey}")
+//
+//
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
