@@ -15,6 +15,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +31,11 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    WeatherView()
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "CurrentWeather"){
+                        composable("CurrentWeatherScreen") {WeatherView()}
+                        composable("ForecastScreen") { ForecastView()}
+                    }
                 }
             }
         }
@@ -50,6 +57,7 @@ fun ForecastView(
             Text(text = "temp")
             forecastData.value?.let {
 //                WeatherConditionIcon(url = it.iconUrl)
+
             }
 
         }
