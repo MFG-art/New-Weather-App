@@ -1,4 +1,4 @@
-package com.ics342.myapplication
+package com.example.myapplication
 
 import com.squareup.moshi.Json
 

@@ -1,7 +1,8 @@
-package com.ics342.myapplication
+package com.example.myapplication
 
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,13 +17,14 @@ object MyAppModule {
     @Provides
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
-            .build()
+            .add(KotlinJsonAdapterFactory())
+                .build()
     }
 
     @Provides
     fun provideRetrofit(moshi: Moshi): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://www.example.com")
+            .baseUrl("https://api.openweathermap.org/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }

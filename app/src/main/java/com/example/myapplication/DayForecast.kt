@@ -9,3 +9,9 @@ data class DayForecast(
         val pressure:Float,
         val humidity:Int,
 )
+
+data class ForecastTemp (
+        val day: Float,
+        val max:Float,
+        val min:Float,
+        )

@@ -1,4 +1,4 @@
-package com.ics342.myapplication
+package com.example.myapplication
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

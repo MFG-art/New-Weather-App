@@ -1,4 +1,4 @@
-package com.ics342.myapplication
+package com.example.myapplication
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,14 +9,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class WeatherViewModel @Inject constructor(private val apiService: ApiService): ViewModel() {
+class ForecastViewModel @Inject constructor(private val apiService: ApiService): ViewModel() {
 
-    private val _weatherData: MutableLiveData<WeatherData> = MutableLiveData()
-    val weatherData: LiveData<WeatherData>
+    private val _weatherData: MutableLiveData<ForecastWeather> = MutableLiveData()
+    val weatherData: LiveData<ForecastWeather>
         get() = _weatherData
 
 
     fun viewAppeared() = viewModelScope.launch {
-        _weatherData.value = apiService.getWeatherData()
+        _weatherData.value = apiService.getForecastData()
     }
+
+
 }
