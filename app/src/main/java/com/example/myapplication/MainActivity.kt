@@ -38,8 +38,8 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "CurrentWeather"){
-                        composable("CurrentWeatherScreen") {WeatherView(navController)}
-                        composable("ForecastScreen.kt") { ForecastView(navController)}
+                        composable("CurrentWeather") {WeatherView(navController)}
+                        composable("ForecastScreen") { ForecastView(navController)}
                     }
                 }
             }
