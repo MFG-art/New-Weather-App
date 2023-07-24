@@ -1,9 +1,11 @@
 package com.example.myapplication
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +14,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -25,6 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -33,40 +38,33 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "CurrentWeather"){
-                        composable("CurrentWeatherScreen") {WeatherView()}
-                        composable("ForecastScreen") { ForecastView()}
+                        composable("CurrentWeatherScreen") {WeatherView(navController)}
+                        composable("ForecastScreen.kt") { ForecastView(navController)}
                     }
                 }
             }
         }
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ForecastView(
-    viewModel: ForecastViewModel = hiltViewModel()
+    navController: NavController,
+    viewModel: ForecastViewModel = hiltViewModel(),
+
 ){
     val forecastData = viewModel.weatherData.observeAsState()
 
     LaunchedEffect(Unit) {
         viewModel.viewAppeared()
     }
-    Log.d("JSON",viewModel.weatherData.toString())
-    Column {
-        Text("City")
-        Row {
-            Text(text = "temp")
-            forecastData.value?.let {
-//                WeatherConditionIcon(url = it.iconUrl)
 
-            }
-
-        }
-    }
-
+    ForecastScreen(navController = navController, forecastData)
 }
 
 @Composable
 fun WeatherView(
+    navController: NavController,
     viewModel: WeatherViewModel = hiltViewModel()
 ) {
     val weatherData = viewModel.weatherData.observeAsState()
@@ -74,20 +72,9 @@ fun WeatherView(
     LaunchedEffect(Unit) {
         viewModel.viewAppeared()
     }
-    Log.d("JSON",viewModel.weatherData.toString())
-    Column {
-        Text("City")
-        Row {
-            Text(text = "temp")
-            weatherData.value?.let {
-//                WeatherConditionIcon(url = it.iconUrl)
-            }
 
-        }
-    }
+    MainScreen(navController = navController, weatherData)
 
-    // Use weatherData to build your view.
-    // Be careful though as it could be `null`.
 }
 
 @Composable

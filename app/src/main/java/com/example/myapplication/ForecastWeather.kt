@@ -8,9 +8,9 @@ data class ForecastWeather(
 )
 
 data class ForecastWeatherItem(
-    val sunrise: Double,
-    val sunset: Double,
-    val temp: ForecastWeatherItem,
+    val sunrise: Long,
+    val sunset: Long,
+    val temp: ForecastWeatherTemp,
     @Json(name = "feels_like")
     val feelsLike: ForecastWeatherFeelsLike,
 
