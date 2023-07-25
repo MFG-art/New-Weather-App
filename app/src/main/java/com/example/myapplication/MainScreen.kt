@@ -36,7 +36,7 @@ fun MainScreen(navController: NavController, weatherData : State<CurrentWeather?
             TopAppBar(
                 title = {
                     Text(
-                        text = "Mauricio's Weather App",
+                        text = stringResource(id = R.string.app_name),
 
                         )
                 },
@@ -65,12 +65,13 @@ fun MainScreen(navController: NavController, weatherData : State<CurrentWeather?
                 Row() {
                     Column() {
                         Text(
-                            text = stringResource(id = R.string.temperature),
-                            fontSize = 60.sp,
+//
+                            text = stringResource(id = R.string.temperature) + weatherData.value?.main?.temp.toString() + stringResource(id = R.string.degrees),
+                            fontSize = 30.sp,
                             color = Color.Black,
                         )
                         Text(
-                            text = stringResource(id = R.string.feels_like),
+                            text = stringResource(id = R.string.feels_like) + weatherData.value?.main?.feelsLike.toString() + stringResource(id = R.string.degrees),
                             fontSize = 20.sp,
                             color = Color.Black,
                         )
@@ -86,30 +87,32 @@ fun MainScreen(navController: NavController, weatherData : State<CurrentWeather?
 
 
                 Text(
-                    text = stringResource(id = R.string.low_temp),
+                    text = stringResource(id = R.string.low_temp) +  weatherData.value?.main?.lowTemp.toString() + stringResource(id = R.string.degrees),
                     fontSize = 20.sp,
                     color = Color.Black,
                 )
                 Text(
-                    text = stringResource(id = R.string.high_temp),
+                    text = stringResource(id = R.string.high_temp) + weatherData.value?.main?.highTemp.toString() + stringResource(id = R.string.degrees),
                     fontSize = 20.sp,
                     color = Color.Black,
                 )
 
                 Text(
-                    text = stringResource(id = R.string.humidity),
+                    text = stringResource(id = R.string.humidity) + weatherData.value?.main?.humidity.toString(),
                     fontSize = 20.sp,
                     color = Color.Black,
                 )
                 Text(
-                    text = stringResource(id = R.string.pressure),
+                    text = stringResource(id = R.string.pressure) + weatherData.value?.main?.pressure.toString() + stringResource(
+                        id = R.string.pressure_unit
+                    ),
                     fontSize = 20.sp,
                     color = Color.Black,
                 )
                 Button(onClick = {
-                    navController.navigate("ForecastScreen.kt")
+                    navController.navigate("ForecastScreen")
                 }) {
-                    Text(text = "Forecast")
+                    Text(text = stringResource(id = R.string.btn_text))
                 }
             }
         })

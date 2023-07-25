@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -28,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import java.text.SimpleDateFormat
 
@@ -43,6 +45,10 @@ fun timestampToDateString(timestamp: Long): String {
 fun timestampToTimeString(timestamp: Long): String {
     val formatter = SimpleDateFormat("h:mm a")
     return formatter.format(timestamp * 1000L)
+}
+
+fun appendStrings(s1: String, s2: String): String {
+    return s1 + s2
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -85,7 +91,8 @@ fun DataItemList(navController: NavController, forecastItems: State<ForecastWeat
         forecastItems.let {
             forecastItems?.value?.let { it ->
                 items(it.list) { forecastWeatherItem ->
-                        ForecastItemView(forecastWeatherItem)
+                    Spacer(modifier = Modifier.size(20.dp))
+                    ForecastItemView(forecastWeatherItem)
                 }
             }
         }
@@ -101,31 +108,44 @@ fun ForecastItemView(forecastWeatherItem: ForecastWeatherItem) {
         modifier = Modifier
             .fillMaxWidth(),
     ) {
-        Image(
-            modifier = Modifier.size(50.dp),
-            painter = painterResource(id = R.drawable.sun),
-            contentDescription = stringResource(id = R.string.sun_string)
-        )
-        Box(modifier = Modifier.align(Alignment.CenterVertically)) {
-            Text(text = timestampToDateString(forecastWeatherItem.sunrise))
-        }
-        Spacer(modifier = Modifier.size(30.dp))
+        Spacer(modifier = Modifier.size(10.dp))
         Column() {
-            Text(text = "Temp: " + forecastWeatherItem.temp.day + "°")
-            Text(text = "High: " + forecastWeatherItem.temp.max + "°")
+
+            Image(
+                modifier = Modifier.size(50.dp),
+                painter = painterResource(id = R.drawable.sun),
+                contentDescription = stringResource(id = R.string.sun_string)
+            )
+
+
         }
+        Text(text = timestampToDateString(forecastWeatherItem.sunrise), style= MaterialTheme.typography.labelLarge)
         Column() {
-            Text(text = "")
-            Text(text = "Low: " + forecastWeatherItem.temp.min + "°")
+            Text(text =  stringResource(id = R.string.temperature) +
+                    forecastWeatherItem.temp.day +
+                    stringResource(id = R.string.degrees),
+                style= MaterialTheme.typography.bodySmall)
+            Text(text = stringResource(id = R.string.high_temp) +
+                    forecastWeatherItem.temp.max +
+                    stringResource(id = R.string.degrees),
+                style= MaterialTheme.typography.bodySmall)
         }
-        Spacer(modifier = Modifier.size(30.dp))
+        Spacer(modifier = Modifier.size(20.dp))
         Column() {
-            Text(text = "Sunrise: " + timestampToTimeString(forecastWeatherItem.sunrise))
-            Text(text = "Sunset: " + timestampToTimeString(forecastWeatherItem.sunset))
+            Text(text = stringResource(id = R.string.empty_string), style= MaterialTheme.typography.bodySmall)
+            Text(text = stringResource(id = R.string.low_temp)
+                    + forecastWeatherItem.temp.min
+                    + stringResource(id = R.string.degrees),
+                style= MaterialTheme.typography.bodySmall)
+        }
+        Spacer(modifier = Modifier.size(20.dp))
+        Column() {
+            Text(text = stringResource(id = R.string.sunrise) + timestampToTimeString(forecastWeatherItem.sunrise), style= MaterialTheme.typography.bodySmall)
+            Text(text = stringResource(id = R.string.sunset) + timestampToTimeString(forecastWeatherItem.sunset), style= MaterialTheme.typography.bodySmall)
         }
 
     }
-    Spacer(modifier = Modifier.size(10.dp))
+    Spacer(modifier = Modifier.size(30.dp))
 
 
 }

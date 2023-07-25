@@ -3,7 +3,7 @@ package com.example.myapplication
 import com.squareup.moshi.Json
 
 data class ForecastWeather(
-    val name: String,
+//    val name: String,
     val list: List<ForecastWeatherItem>,
 )
 
