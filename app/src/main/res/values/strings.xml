@@ -14,6 +14,7 @@
     <string name="sunset">Sunset: </string>
     <string name="empty_string"></string>
     <string name="btn_text">Forecast Screen</string>
+    <string name="search_btn">Search Weather</string>
 
 
 </resources>
