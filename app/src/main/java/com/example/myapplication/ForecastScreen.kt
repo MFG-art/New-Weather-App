@@ -54,7 +54,7 @@ fun appendStrings(s1: String, s2: String): String {
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForecastScreen(navController: NavController, forecastData: State<ForecastWeather?>) {
+fun ForecastScreen(navController: NavController,  forecastData: State<ForecastWeather?>) {
     Scaffold(
         topBar = {
             TopAppBar(

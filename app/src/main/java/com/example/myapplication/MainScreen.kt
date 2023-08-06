@@ -18,7 +18,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.semantics.Role.Companion.Image
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -33,7 +40,10 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController, weatherData : State<CurrentWeather?>) {
+fun MainScreen(navController: NavController, zipCode: MutableState<Int>,viewModel: WeatherViewModel) {
+    var textBoxInput by remember { mutableStateOf("") }
+    val weatherData = viewModel.weatherData.observeAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,8 +68,12 @@ fun MainScreen(navController: NavController, weatherData : State<CurrentWeather?
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TextField(value = "", onValueChange = {})
-                Button(onClick = { Log.d("TEST","this is a test")
+                TextField(value = textBoxInput, onValueChange = { newText: String -> textBoxInput = newText})
+                Button(onClick = {
+                    viewModel.viewAppeared(
+                        textBoxInput.toInt())
+                    zipCode.value = textBoxInput.toInt()
+
                 }) {
                     Text(text = stringResource(id = R.string.search_btn))
                 }
@@ -118,7 +132,7 @@ fun MainScreen(navController: NavController, weatherData : State<CurrentWeather?
                     color = Color.Black,
                 )
                 Button(onClick = {
-                    navController.navigate("ForecastScreen")
+                    navController.navigate("ForecastScreen/" + zipCode.value.toString())
                 }) {
                     Text(text = stringResource(id = R.string.btn_text))
                 }

@@ -16,8 +16,8 @@ class ForecastViewModel @Inject constructor(private val apiService: ApiService):
         get() = _weatherData
 
 
-    fun viewAppeared() = viewModelScope.launch {
-        _weatherData.value = apiService.getForecastData(55075)
+    fun viewAppeared(zipCode: Int) = viewModelScope.launch {
+        _weatherData.value = apiService.getForecastData(zipCode)
     }
 
 

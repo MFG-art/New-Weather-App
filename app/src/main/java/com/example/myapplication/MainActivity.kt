@@ -14,14 +14,22 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavArgument
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import coil.compose.AsyncImage
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,14 +40,19 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
+                    val zipCodeState = remember {mutableStateOf(55075)}
+
                     NavHost(navController = navController, startDestination = "CurrentWeather"){
-                        composable("CurrentWeather") {WeatherView(navController)}
-                        composable("ForecastScreen") { ForecastView(navController)}
+                        composable("CurrentWeather") {WeatherView(navController, zipCodeState)}
+                        composable("ForecastScreen/{zipcode}",
+                            arguments = listOf(navArgument("zipcode") { type = NavType.StringType })
+                            ) { backStackEntry ->  ForecastView(navController, backStackEntry.arguments?.getString("zipcode"))}
                     }
                 }
             }
@@ -50,14 +63,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ForecastView(
     navController: NavController,
+    zipCode: String?,
     viewModel: ForecastViewModel = hiltViewModel(),
 
 ){
     val forecastData = viewModel.weatherData.observeAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.viewAppeared()
+        zipCode?.toInt()?.let { viewModel.viewAppeared(it) }
     }
+
+    zipCode?.toInt()?.let { viewModel.viewAppeared(it) }
+
 
     ForecastScreen(navController = navController, forecastData)
 }
@@ -65,15 +82,15 @@ fun ForecastView(
 @Composable
 fun WeatherView(
     navController: NavController,
+    zipCode: MutableState<Int>,
     viewModel: WeatherViewModel = hiltViewModel()
 ) {
-    val weatherData = viewModel.weatherData.observeAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.viewAppeared()
+        viewModel.viewAppeared(zipCode.value)
     }
 
-    MainScreen(navController = navController, weatherData)
+    MainScreen(navController = navController,zipCode, viewModel)
 
 }
 
