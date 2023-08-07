@@ -13,6 +13,7 @@ data class ForecastWeatherItem(
     val temp: ForecastWeatherTemp,
     @Json(name = "feels_like")
     val feelsLike: ForecastWeatherFeelsLike,
+    val weather: List<WeatherListItem>
 
 
 )

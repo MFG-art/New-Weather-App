@@ -4,7 +4,8 @@ import com.squareup.moshi.Json
 
 data class CurrentWeather(
     val name: String,
-    val main: WeatherObject
+    val main: WeatherObject,
+    val weather: List<WeatherListItem>
 
 )
 
@@ -19,3 +20,7 @@ data class WeatherObject(
     val humidity: Int,
     val pressure: Float,
 )
+
+data class WeatherListItem (
+    val icon: String,
+        )

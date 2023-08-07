@@ -36,6 +36,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,15 +71,23 @@ fun MainScreen(navController: NavController, zipCode: MutableState<Int>,viewMode
             ) {
                 TextField(value = textBoxInput, onValueChange = { newText: String -> textBoxInput = newText})
                 Button(onClick = {
-                    viewModel.viewAppeared(
-                        textBoxInput.toInt())
-                    zipCode.value = textBoxInput.toInt()
+
+                    try {
+                        viewModel.viewAppeared(
+                            textBoxInput.toInt()
+                        )
+                        zipCode.value = textBoxInput.toInt()
+                    } catch(e: Error){
+
+
+
+                    }
 
                 }) {
                     Text(text = stringResource(id = R.string.search_btn))
                 }
                 Text(
-                    text = stringResource(id = R.string.location),
+                    text = weatherData.value?.name.toString(),
                     fontSize = 18.sp,
                     color = Color.Black,
 //                    layout_marginTop = 10.dp,
@@ -99,10 +108,14 @@ fun MainScreen(navController: NavController, zipCode: MutableState<Int>,viewMode
                         )
                     }
 
-                    Image(
-                        modifier = Modifier.size(150.dp),
-                        painter = painterResource(id = R.drawable.sun),
-                        contentDescription = stringResource(id = R.string.sun_string)
+//                    Image(
+//                        modifier = Modifier.size(150.dp),
+//                        painter = painterResource(id = R.drawable.sun),
+//                        contentDescription = stringResource(id = R.string.sun_string)
+//                    )
+                    AsyncImage(
+                        model = "https://openweathermap.org/img/wn/" + weatherData.value?.weather?.get(0)?.icon.toString() + "@4x.png",
+                        contentDescription = null,
                     )
 
                 }

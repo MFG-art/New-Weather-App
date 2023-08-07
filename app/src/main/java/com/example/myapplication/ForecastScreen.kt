@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import java.text.SimpleDateFormat
 
 
@@ -111,10 +112,9 @@ fun ForecastItemView(forecastWeatherItem: ForecastWeatherItem) {
         Spacer(modifier = Modifier.size(10.dp))
         Column() {
 
-            Image(
-                modifier = Modifier.size(50.dp),
-                painter = painterResource(id = R.drawable.sun),
-                contentDescription = stringResource(id = R.string.sun_string)
+            AsyncImage(
+                model = "https://openweathermap.org/img/wn/" + forecastWeatherItem.weather?.get(0)?.icon.toString() +"@2x.png",
+                contentDescription = null,
             )
 
 
