@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import java.lang.NumberFormatException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,15 +73,14 @@ fun MainScreen(navController: NavController, zipCode: MutableState<Int>,viewMode
                 TextField(value = textBoxInput, onValueChange = { newText: String -> textBoxInput = newText})
                 Button(onClick = {
 
-                    try {
-                        viewModel.viewAppeared(
-                            textBoxInput.toInt()
-                        )
-                        zipCode.value = textBoxInput.toInt()
-                    } catch(e: Error){
-
-
-
+                    if (textBoxInput.length == 5) {
+                        try {
+                            viewModel.viewAppeared(
+                                textBoxInput.toInt()
+                            )
+                            zipCode.value = textBoxInput.toInt()
+                        } catch (e: NumberFormatException) {
+                        }
                     }
 
                 }) {
