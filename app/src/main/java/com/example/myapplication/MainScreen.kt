@@ -1,15 +1,13 @@
 package com.example.myapplication
 
-import android.media.Image
-import android.util.Log
-import androidx.compose.foundation.Image
+import android.app.AlertDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -19,7 +17,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -28,16 +25,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role.Companion.Button
-import androidx.compose.ui.semantics.Role.Companion.Image
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import java.lang.NumberFormatException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +37,7 @@ import java.lang.NumberFormatException
 fun MainScreen(navController: NavController, zipCode: MutableState<Int>,viewModel: WeatherViewModel) {
     var textBoxInput by remember { mutableStateOf("") }
     val weatherData = viewModel.weatherData.observeAsState()
+    var showZipCodeAlert by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -62,6 +55,9 @@ fun MainScreen(navController: NavController, zipCode: MutableState<Int>,viewMode
 
                 )
         }, content = {
+            if (showZipCodeAlert) {
+                zipCodeAlert(onConfirm = { showZipCodeAlert = false}, onCancel = {showZipCodeAlert = false})
+            }
             Column(
                 modifier = Modifier
                     .padding(it)
@@ -80,8 +76,10 @@ fun MainScreen(navController: NavController, zipCode: MutableState<Int>,viewMode
                             )
                             zipCode.value = textBoxInput.toInt()
                         } catch (e: NumberFormatException) {
+                            showZipCodeAlert = true;
                         }
                     }
+                    showZipCodeAlert = true;
 
                 }) {
                     Text(text = stringResource(id = R.string.search_btn))
@@ -152,3 +150,31 @@ fun MainScreen(navController: NavController, zipCode: MutableState<Int>,viewMode
             }
         })
 }
+
+@Composable
+private fun zipCodeAlert(
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = {},
+        confirmButton = @Composable {
+            Button(onClick = { onConfirm() }) {
+                Text("OK")
+            }
+        },
+        dismissButton = @Composable {
+            Button(onClick = { onCancel() }) {
+                Text("OK")
+            }
+        },
+        title = @Composable {
+            Text("Error")
+        },
+        text = @Composable {
+            Text("Please enter a valid zip code")
+        }
+    )
+}
+
+
